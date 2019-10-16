@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="15dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/place_search"
+        android:hint="Search"
+        android:inputType="textPostalAddress"
+        android:padding="15dp"
+        android:layout_marginBottom="15dp"
+        android:drawableLeft="@drawable/places_ic_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/places_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFF"
+        android:orientation="vertical"
+        android:padding="15dp"></androidx.recyclerview.widget.RecyclerView>
+
+    <ToggleButton
+        android:id="@+id/toggle"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center" />
+</LinearLayout>
