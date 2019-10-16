@@ -25,6 +25,14 @@
         android:orientation="vertical"
         android:padding="15dp"></androidx.recyclerview.widget.RecyclerView>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/saved_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFF"
+        android:orientation="vertical"
+        android:padding="15dp"></androidx.recyclerview.widget.RecyclerView>
+
     <ToggleButton
         android:id="@+id/toggle"
         android:layout_width="100dp"
