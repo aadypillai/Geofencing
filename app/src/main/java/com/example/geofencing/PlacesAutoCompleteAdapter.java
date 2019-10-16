@@ -181,7 +181,9 @@ public class PlacesAutoCompleteAdapter extends RecyclerView.Adapter<PlacesAutoCo
         @Override
         public void onClick(View v) {
             PlaceAutocomplete item = mResultList.get(getAdapterPosition());
-            if (v.getId() == R.id.place_item_view) {
+            Log.d("Henlo" , "Outside if statement");
+            //if (v.getId() == R.id.place_item_view) {
+                Log.d("Henlo" , "Inside if statement");
 
                 String placeId = String.valueOf(item.placeId);
 
@@ -201,7 +203,7 @@ public class PlacesAutoCompleteAdapter extends RecyclerView.Adapter<PlacesAutoCo
                         }
                     }
                 });
-            }
+            //}
         }
     }
 
