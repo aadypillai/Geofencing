@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -52,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements PlacesAutoComplet
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 GeofenceActionProvider.Statics.setEnabled(b);
                 Toast.makeText(MainActivity.this,b ? "Fencing enabled" : "Fencing disabled",Toast.LENGTH_SHORT).show();
+                if (b) {
+                    Intent i = new Intent(MainActivity.this,MapViewActivity.class);
+                    i.putExtra(MapViewActivity.INTENT_LOCATION_KEY,savedList);
+                    startActivity(i);
+                }
             }
         });
 
