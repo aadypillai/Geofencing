@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <header
-        android:fragment="your.package.MyPreferenceFragment"
+        android:fragment="com.example.geofencing.MyPreferenceFragment"
         android:title="Goto: Preference fragment"
         android:summary="An example of some preferences." />
 

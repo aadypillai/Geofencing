@@ -3,12 +3,27 @@ package com.example.geofencing;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
 
-public class MyPreferenceActivity extends AppCompatActivity {
+import java.util.List;
+
+public class MyPreferenceActivity extends PreferenceActivity
+{
+    @Override
+    public void onBuildHeaders(List<Header> target)
+    {
+        loadHeadersFromResource(R.xml.headers_preference, target);
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_preference);
+    protected boolean isValidFragment(String fragmentName)
+    {
+        return MainActivity.MyPreferenceFragment.class.getName().equals(fragmentName);
     }
+
+
 }
+
+
+

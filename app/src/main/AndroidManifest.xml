@@ -9,7 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GridAdapter"></activity>
+        <activity
+            android:name="com.example.geofencing.MyPreferenceActivity"
+            android:label="Preferences">
+        </activity>
+        <activity android:name=".GridAdapter" />
         <activity android:name=".PlacesAutoCompleteAdapter" />
         <activity android:name=".MainActivity">
             <intent-filter>

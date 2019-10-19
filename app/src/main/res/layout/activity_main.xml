@@ -24,6 +24,15 @@
         android:background="#FFF"
         android:orientation="vertical"
         android:padding="15dp"></androidx.recyclerview.widget.RecyclerView>
+    <TextView
+        android:id="@+id/savedTitle"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:text="Fenced Locations"
+        android:textSize="18sp"
+        android:textStyle="normal|bold"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/saved_recycler_view"
