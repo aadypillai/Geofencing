@@ -3,13 +3,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -25,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+
 public class MainActivity extends AppCompatActivity implements PlacesAutoCompleteAdapter.ClickListener {
     private ArrayList<Place> savedList;
     ToggleButton toggle;
@@ -35,14 +40,25 @@ public class MainActivity extends AppCompatActivity implements PlacesAutoComplet
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     private PlacesClient placesClient;
+    private GeofencingProvider geofencingProvider;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toggle = findViewById(R.id.toggle);
-        //toggle.setOnClickListener(this);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                GeofenceActionProvider.Statics.setEnabled(b);
+                Toast.makeText(MainActivity.this,b ? "Fencing enabled" : "Fencing disabled",Toast.LENGTH_SHORT).show();
+            }
+        });
+
         Places.initialize(this, "AIzaSyB45KFBO3F2YujEWyq216k0jMqqX_n1le0");
         savedList = new ArrayList<>();
+
+        geofencingProvider = new LocalGeofencing(this);
 
         pref = getApplicationContext().getSharedPreferences("preferences", 0);
         editor = pref.edit();
@@ -61,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements PlacesAutoComplet
         gridAdapter.setClickListener(new GridAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                geofencingProvider.removeFence(savedList.get(position));
                 editor.remove(savedList.get(position).getName());
                 editor.apply();
                 savedList.remove(savedList.get(position));
@@ -70,11 +87,12 @@ public class MainActivity extends AppCompatActivity implements PlacesAutoComplet
         recyclerViewSaved.setAdapter(gridAdapter);
         gridAdapter.notifyDataSetChanged();
 
+        GeofenceActionProvider.Statics.setAudioService((AudioManager)getSystemService(AUDIO_SERVICE));
+
         Log.d("Keys" , pref.getAll().toString());
         Map<String, ?> keys = pref.getAll();
-        Log.d("Useless" , "well i got here");
+
         for (Map.Entry<String, ?> entry : keys.entrySet()) {
-            Log.d("Useful" , "Im in!");
             Log.d("map values", entry.getKey() + ": " + entry.getValue().toString());
             String placeId = String.valueOf(entry.getValue());
 
@@ -86,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements PlacesAutoComplet
                     Place place = response.getPlace();
                     savedList.add(place);
                     gridAdapter.notifyDataSetChanged();
-                    Log.d("Useful" , "inside fetch request!!!!!!");
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -96,7 +113,8 @@ public class MainActivity extends AppCompatActivity implements PlacesAutoComplet
                 }
             });
         }
-        Log.d("Useless" , "well i got here as well");
+
+        requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},0);
     }
     private TextWatcher filterTextWatcher = new TextWatcher() {
         public void afterTextChanged(Editable s) {
@@ -110,18 +128,21 @@ public class MainActivity extends AppCompatActivity implements PlacesAutoComplet
         public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
         public void onTextChanged(CharSequence s, int start, int before, int count) { }
     };
+
     @Override
     public void click(Place place) {
-        Log.d("Henlo" , "Inside click!");
         Toast.makeText(this, place.getAddress()+", "+place.getLatLng().latitude+place.getLatLng().longitude, Toast.LENGTH_SHORT).show();
         savedList.add(place);
+        gridAdapter.savedList = savedList;
+        gridAdapter.notifyDataSetChanged();
         mAutoCompleteAdapter.notifyDataSetChanged();
         editor.putString(place.getName() , place.getId());
         editor.apply();
 
+        geofencingProvider.addFence(place);
     }
-    public static class MyPreferenceFragment extends PreferenceFragment
-    {
+
+    public static class MyPreferenceFragment extends PreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState)
         {
@@ -129,13 +150,4 @@ public class MainActivity extends AppCompatActivity implements PlacesAutoComplet
             addPreferencesFromResource(R.xml.preferences);
         }
     }
-/*    @Override
-    public void onClick(View v) {
-        switch (v.getId())  {
-            case R.id.toggle:
-                //TURN SILENT MODE ON OR OFF
-        }
-    }
-
-*/
 }

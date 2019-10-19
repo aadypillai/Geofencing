@@ -25,7 +25,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import java.util.ArrayList;
 
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.CustomViewHolder> {
-    private ArrayList<com.google.android.libraries.places.api.model.Place> savedList = new ArrayList<>();
+    public ArrayList<com.google.android.libraries.places.api.model.Place> savedList = new ArrayList<>();
     private Context mContext;
     private CharacterStyle STYLE_BOLD;
     private CharacterStyle STYLE_NORMAL;
